@@ -8,17 +8,17 @@
 
 import UIKit
 
-class RXAdView: UIView {
+open class RXAdView: UIView {
     
-    var willDismiss: () -> Void = {}
+    open var willDismiss: () -> Void = {}
     
-    var defaultImg: UIImage? {
+    open var defaultImg: UIImage? {
         didSet {
             bgImgView.image = defaultImg
         }
     }
     
-    var imgUrl: String? {
+    open var imgUrl: String? {
         didSet {
             guard let url = imgUrl else {
                 return
@@ -35,14 +35,14 @@ class RXAdView: UIView {
             }
         }
     }
-
+    
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -53,7 +53,7 @@ class RXAdView: UIView {
     }
     
     //MARK: - Layout
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
     }
     
@@ -78,7 +78,7 @@ class RXAdView: UIView {
     //MARK: - Controls
     var bgImgView: UIImageView = {
         let imgView = UIImageView();
-//        imgView.image = UIImage.init(named: "")
+        //        imgView.image = UIImage.init(named: "")
         imgView.translatesAutoresizingMaskIntoConstraints = false
         return imgView
     }()
@@ -171,3 +171,4 @@ extension RXAdView {
     }
     
 }
+
