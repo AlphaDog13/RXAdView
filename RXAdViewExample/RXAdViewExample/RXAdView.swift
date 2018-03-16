@@ -35,9 +35,9 @@ open class RXAdView: UIView {
             }
         }
     }
-
+    
     //MARK: - Init
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
@@ -46,7 +46,7 @@ open class RXAdView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func setup() {
+    open func setup() {
         addSubview(bgImgView)
         addSubview(skipBtn)
         layout()
@@ -57,7 +57,7 @@ open class RXAdView: UIView {
         super.layoutSubviews()
     }
     
-    fileprivate func layout() {
+    open func layout() {
         ///bgImgView
         let xCons = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bgImgView]-0-|", options: .directionLeftToRight, metrics: nil, views: ["bgImgView": bgImgView])
         addConstraints(xCons)
@@ -76,14 +76,14 @@ open class RXAdView: UIView {
     }
     
     //MARK: - Controls
-    var bgImgView: UIImageView = {
+    open var bgImgView: UIImageView = {
         let imgView = UIImageView();
-//        imgView.image = UIImage.init(named: "")
+        //        imgView.image = UIImage.init(named: "")
         imgView.translatesAutoresizingMaskIntoConstraints = false
         return imgView
     }()
     
-    var skipBtn: UIButton = {
+    open var skipBtn: UIButton = {
         let btn = UIButton.init(type: .custom)
         btn.titleLabel?.font = .systemFont(ofSize: 15)
         btn.setTitleColor(UIColor.white, for: .normal)
@@ -96,7 +96,7 @@ open class RXAdView: UIView {
     }()
     
     //MARK: - Action
-    fileprivate func startTimer() {
+    open func startTimer() {
         DispatchTimer(timeInterval: 1, repeatCount: 4) { (timer, count) in
             self.skipBtn.setTitle("跳过 \(count)", for: .normal)
             if count <= 0 {
@@ -170,4 +170,4 @@ extension RXAdView {
         return (paths[0] as NSString).appending("/" + fileName)
     }
     
-}
+}\
