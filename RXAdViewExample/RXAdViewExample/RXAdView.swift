@@ -170,4 +170,4 @@ extension RXAdView {
         return (paths[0] as NSString).appending("/" + fileName)
     }
     
-}\
+}
