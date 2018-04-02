@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "RXAdView"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "An launch Ad View"
 
   s.homepage     = "https://github.com/AlphaDog13/RXAdView"

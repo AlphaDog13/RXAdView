@@ -10,7 +10,7 @@ import UIKit
 
 open class RXAdView: UIView {
     
-    open var willDismiss: () -> Void = {}
+    @objc open var willDismiss: () -> Void = {}
     
     open var defaultImg: UIImage? {
         didSet {
@@ -18,7 +18,7 @@ open class RXAdView: UIView {
         }
     }
     
-    open var imgUrl: String? {
+    @objc open var imgUrl: String? {
         didSet {
             guard let url = imgUrl else {
                 return
