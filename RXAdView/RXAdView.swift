@@ -11,8 +11,19 @@ import UIKit
 open class RXAdView: UIView {
     
     @objc open var willDismiss: () -> Void = {}
+    @objc open var bgImgClick: () -> Void = {}
     
-    open var defaultImg: UIImage? {
+    let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
+    @objc open var staySeconds: Int = 5
+    
+    @objc open var skipBtnColor: UIColor = .white {
+        didSet {
+            skipBtn.setTitleColor(skipBtnColor, for: .normal)
+            skipBtn.layer.borderColor = skipBtnColor.cgColor
+        }
+    }
+    
+    @objc open var defaultImg: UIImage? {
         didSet {
             bgImgView.image = defaultImg
         }
@@ -36,6 +47,27 @@ open class RXAdView: UIView {
         }
     }
     
+    //MARK: - Controls
+    open var bgImgView: UIImageView = {
+        let imgView = UIImageView();
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.isUserInteractionEnabled = true
+        return imgView
+    }()
+    
+    open var skipBtn: UIButton = {
+        let btn = UIButton.init(type: .custom)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.titleLabel?.font = .systemFont(ofSize: 15)
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.layer.cornerRadius = 4
+        btn.layer.borderWidth = 1
+        btn.layer.borderColor = UIColor.white.cgColor
+        btn.setTitle("跳过", for: .normal)
+        btn.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
+        return btn
+    }()
+    
     //MARK: - Init
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,15 +80,13 @@ open class RXAdView: UIView {
     
     open func setup() {
         addSubview(bgImgView)
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(bgImgAction))
+        bgImgView.addGestureRecognizer(tapGesture)
         addSubview(skipBtn)
         layout()
     }
     
     //MARK: - Layout
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     open func layout() {
         ///bgImgView
         let xCons = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bgImgView]-0-|", options: .directionLeftToRight, metrics: nil, views: ["bgImgView": bgImgView])
@@ -75,29 +105,9 @@ open class RXAdView: UIView {
         addConstraint(skipY)
     }
     
-    //MARK: - Controls
-    open var bgImgView: UIImageView = {
-        let imgView = UIImageView();
-        //        imgView.image = UIImage.init(named: "")
-        imgView.translatesAutoresizingMaskIntoConstraints = false
-        return imgView
-    }()
-    
-    open var skipBtn: UIButton = {
-        let btn = UIButton.init(type: .custom)
-        btn.titleLabel?.font = .systemFont(ofSize: 15)
-        btn.setTitleColor(UIColor.white, for: .normal)
-        btn.layer.borderWidth = 0.5
-        btn.layer.borderColor = UIColor.white.cgColor
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("跳过", for: .normal)
-        btn.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
-        return btn
-    }()
-    
     //MARK: - Action
     open func startTimer() {
-        DispatchTimer(timeInterval: 1, repeatCount: 4) { (timer, count) in
+        DispatchTimer(timeInterval: 1, repeatCount: staySeconds) { (timer, count) in
             self.skipBtn.setTitle("跳过 \(count)", for: .normal)
             if count <= 0 {
                 self.dismiss()
@@ -109,16 +119,16 @@ open class RXAdView: UIView {
         if repeatCount <= 0 {
             return
         }
-        let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
+        
         var count = repeatCount
         timer.schedule(deadline: .now(), repeating: timeInterval)
         timer.setEventHandler(handler: {
             count -= 1
             DispatchQueue.main.async {
-                handler(timer, count)
+                handler(self.timer, count)
             }
             if count == 0 {
-                timer.cancel()
+                self.timer.cancel()
             }
         })
         timer.resume()
@@ -126,6 +136,14 @@ open class RXAdView: UIView {
     
     @objc open func dismiss() {
         willDismiss()
+        timer.cancel()
+        removeFromSuperview()
+    }
+    
+    @objc func bgImgAction() {
+        willDismiss()
+        timer.cancel()
+        bgImgClick()
         removeFromSuperview()
     }
     

@@ -13,9 +13,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        //加载广告页
+        window?.isHidden = false
+        let adView = RXAdView(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        adView.staySeconds = 10 //停留时间
+        adView.skipBtnColor = .black //跳过按钮颜色
+        adView.imgUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1526974707182&di=b4a1ac293871ea193364ad47d5eb38e9&imgtype=0&src=http%3A%2F%2Fimg5.duitang.com%2Fuploads%2Fitem%2F201508%2F28%2F20150828223722_WeZ4z.jpeg"
+        adView.willDismiss = {
+            print("AdViewWillDismiss")
+        }
+        adView.bgImgClick = {
+            print("bgImgClick")
+        }
+        window?.addSubview(adView)
+        
         return true
     }
 
