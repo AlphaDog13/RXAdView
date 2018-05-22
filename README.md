@@ -10,7 +10,7 @@
 
 ## 样例
 
-![](https://github.com/AlphaDog13/RXCalendarView/blob/master/IMB_7fMynP.GIF)
+![](https://github.com/AlphaDog13/RXAdView/blob/master/89B5706EAD63-1.gif)
 
 
 ## 需要
