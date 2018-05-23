@@ -11,7 +11,12 @@ import UIKit
 open class RXAdView: UIView {
     
     @objc open var willDismiss: () -> Void = {}
-    @objc open var bgImgClick: () -> Void = {}
+    @objc open var bgImgClick: (() -> Void)? {
+        didSet {
+            let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(bgImgAction))
+            bgImgView.addGestureRecognizer(tapGesture)
+        }
+    }
     
     let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
     @objc open var staySeconds: Int = 5
@@ -80,8 +85,6 @@ open class RXAdView: UIView {
     
     open func setup() {
         addSubview(bgImgView)
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(bgImgAction))
-        bgImgView.addGestureRecognizer(tapGesture)
         addSubview(skipBtn)
         layout()
     }
@@ -143,7 +146,7 @@ open class RXAdView: UIView {
     @objc func bgImgAction() {
         willDismiss()
         timer.cancel()
-        bgImgClick()
+        bgImgClick?()
         removeFromSuperview()
     }
     
